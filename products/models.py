@@ -21,6 +21,7 @@ class Product(TimeStampModel):
     content_url  = models.CharField(max_length=200)
     price        = models.DecimalField(max_digits=10, decimal_places=2)
     stock        = models.IntegerField()
+    sold         = models.IntegerField()
     sub_category = models.ForeignKey('SubCategory', on_delete=models.CASCADE)
 
     class Meta:
@@ -37,6 +38,9 @@ class WorkoutLink(models.Model):
     thumbnail_url = models.CharField(max_length=200)
     video_url     = models.CharField(max_length=200)
     product       = models.ForeignKey('Product', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'workout_links'
 
 
 
