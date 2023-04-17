@@ -7,16 +7,17 @@ from products.models  import Product, Category, SubCategory
 class ProductListView(View):
     def get(self, request):
         try:
-            main_category = request.GET.get('main_category', 'speakers')
-            sub_category  = request.GET.get('sub_category')
-            sort_method   = request.GET.get('sort_method', '-release_date')
-            limit         = int(request.GET.get('limit', 9))
-            offset        = int(request.GET.get('offset', 0))
+            category     = request.GET.get('category')
+            sub_category = request.GET.get('sub_category')
+            # + : 오름차순, - : 내림차순
+            sort_method  = request.GET.get('sort_method', '-release_date') # 최신순
+            offset       = int(request.GET.get('offset', 0))
+            limit        = 8
 
             q = Q()
 
-            if main_category:
-                q &= Q(sub_category__category__name=main_category)
+            if category:
+                q &= Q(sub_category__category__name=category)
 
             elif sub_category:
                 q &= Q(sub_category__name=sub_category)
@@ -30,15 +31,18 @@ class ProductListView(View):
                     'name'        : product.name,
                     'description' : product.description,
                     'price'       : product.price,
+                    'stock'       : product.stock,
+                    'sold'        : product.sold,
                     'image_url'   : [image.image_url for image in product.productimage_set.all()],
-                    'release_date': product.release_date,
+                    'release_date': product.created_at,
                 } for product in products_list
             ]
 
-            return JsonResponse({'RESULT':res_products, 'totalItems' : products.count()}, status=200)
+            return JsonResponse({'result':res_products}, status=200)
         
         except Category.DoesNotExist:
             return JsonResponse({'message':'CATEGORY_DOES_NOT_EXIST'}, status=404)
+        
         except SubCategory.DoesNotExist:
             return JsonResponse({'message':'SUB_CATEGORY_DOES_NOT_EXIST'}, status=404)
 
@@ -47,15 +51,28 @@ class ProductDetailView(View):
         try:
             product = Product.objects.get(id = product_id)
             product_detail = {
-                'id'           : product.id,
-                'name'         : product.name,
-                'product_image': [product.image_url for product in product.productimage_set.all()],
-                'description'  : product.description,
-                'content_url'  : product.content_url,
-                'price'        : product.price,
-                'stock'        : product.stock
+                'id'          : product.id,
+                'name'        : product.name,
+                'description' : product.description,
+                'content_url' : product.content_url,
+                'price'       : product.price,
+                'stock'       : product.stock,
+                'image_url'   : [image.image_url for image in product.productimage_set.all()],
+                'release_date': product.created_at,
             }
-            return JsonResponse({"result" : product_detail}, status=200)
+            if product.sub_category.category == '운동기구':
+                workout_links = {
+                    {
+                        'thumbnail_url' : link.thumbnail_url,
+                        'video_url' : link.video_url,
+                        'product' : product.id
+                        
+                    } for link in product.workoutlink_set.all()
+                }
+                return JsonResponse({"result" : {"product_detail" : product_detail, "workout_links" : workout_links}}, status = 200)
+            
+            else:
+                return JsonResponse({"result" : product_detail}, status=200)
         
         except Product.DoesNotExist:
-            return JsonResponse({"message" : "DoesNotExist"}, status=400)
+            return JsonResponse({"message" : "PRODUCT_DOES_NOT_EXIST"}, status=400)
