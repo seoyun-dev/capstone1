@@ -19,12 +19,11 @@ class ProductListView(View):
             if category:
                 q &= Q(sub_category__category__name=category)
 
-            elif sub_category:
+            if sub_category:
                 q &= Q(sub_category__name=sub_category)
 
             products      = Product.objects.filter(q).order_by(sort_method)
             products_list = products[offset:offset+limit]
-            print(products_list[5].productimage_set.first().image_url)
             res_products = [
                 {
                     'id'          : product.id,
@@ -34,7 +33,7 @@ class ProductListView(View):
                     'stock'       : product.stock,
                     'sold'        : product.sold,
                     'image_url'   : [image.image_url for image in product.productimage_set.all()],
-                    'release_date': product.created_at,
+                    'release_date': product.release_date,
                 } for product in products_list
             ]
 
@@ -58,7 +57,7 @@ class ProductDetailView(View):
                 'price'       : product.price,
                 'stock'       : product.stock,
                 'image_url'   : [image.image_url for image in product.productimage_set.all()],
-                'release_date': product.created_at,
+                'release_date': product.release_date,
             }
             if product.sub_category.category == '운동기구':
                 workout_links = {

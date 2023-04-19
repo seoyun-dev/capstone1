@@ -22,6 +22,7 @@ class Product(TimeStampModel):
     price        = models.DecimalField(max_digits=10, decimal_places=2)
     stock        = models.IntegerField()
     sold         = models.IntegerField()
+    release_date = models.DateField()
     sub_category = models.ForeignKey('SubCategory', on_delete=models.CASCADE)
 
     class Meta:
