@@ -59,15 +59,14 @@ class ProductDetailView(View):
                 'image_url'   : [image.image_url for image in product.productimage_set.all()],
                 'release_date': product.release_date,
             }
-            if product.sub_category.category.id == 3:
-                workout_links = {
+            if product.sub_category.category.name == "fitness_equipment":
+                workout_links = [
                     {
                         'thumbnail_url' : link.thumbnail_url,
                         'video_url' : link.video_url,
                         'product' : product.id
-                        
                     } for link in product.workoutlink_set.all()
-                }
+                ]
                 return JsonResponse({"result" : {"product_detail" : product_detail, "workout_links" : workout_links}}, status = 200)
             
             else:
