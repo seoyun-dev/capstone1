@@ -10,7 +10,7 @@ class ProductListView(View):
             category     = request.GET.get('category')
             sub_category = request.GET.get('sub_category')
             # + : 오름차순, - : 내림차순
-            sort_method  = request.GET.get('sort_method', '-release_date') # 최신순
+            sort_method  = request.GET.get('sort_method', '-release_date') # 최신순 
             offset       = int(request.GET.get('offset', 0))
             limit        = 8
 
