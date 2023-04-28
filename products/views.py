@@ -59,7 +59,7 @@ class ProductDetailView(View):
                 'image_url'   : [image.image_url for image in product.productimage_set.all()],
                 'release_date': product.release_date,
             }
-            if product.sub_category.category == '운동기구':
+            if product.sub_category.category.id == 3:
                 workout_links = {
                     {
                         'thumbnail_url' : link.thumbnail_url,
