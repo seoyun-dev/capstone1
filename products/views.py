@@ -16,10 +16,13 @@ class ProductListView(View):
 
             q = Q()
             
-            if Category.objects.get(name=category):
+            if category:
+                # 예외처리 위해
+                Category.objects.get(name=category)
                 q &= Q(sub_category__category__name=category)
 
-            if SubCategory.objects.get(name=sub_category):
+            if sub_category:
+                SubCategory.objects.get(name=sub_category)
                 q &= Q(sub_category__name=sub_category)
 
             products      = Product.objects.filter(q).order_by(sort_method)
