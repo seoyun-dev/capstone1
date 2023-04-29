@@ -15,11 +15,11 @@ class ProductListView(View):
             limit        = 8
 
             q = Q()
-
-            if category:
+            
+            if Category.objects.get(name=category):
                 q &= Q(sub_category__category__name=category)
 
-            if sub_category:
+            if SubCategory.objects.get(name=sub_category):
                 q &= Q(sub_category__name=sub_category)
 
             products      = Product.objects.filter(q).order_by(sort_method)
