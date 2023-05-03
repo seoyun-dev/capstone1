@@ -1,20 +1,22 @@
+
 import json
 
 from django.http     import JsonResponse
 from django.views    import View
 
 from carts.models    import Cart
-from users.utils     import login_decorator
+from users.utils     import signin_decorator
 from products.models import Product
 
 class CartView(View):
-    @login_decorator
+    @signin_decorator
     def post(self, request):
         try:
             data     = json.loads(request.body)
             quantity = data['quantity']
             product  = Product.objects.get(id=data['product_id'])
             
+            # 아래 조건을 만족하는 cart object 있으면 get, 없으면 create(deafults 적용)
             cart, created = Cart.objects.get_or_create(
                 defaults  = {'quantity' : quantity},
                 product   = product,
@@ -32,22 +34,22 @@ class CartView(View):
         except json.JSONDecodeError:
             return JsonResponse({'message':'JSONDecodeError'}, status=404)
 
-    @login_decorator
+    @signin_decorator
     def get(self, request):
         cart_products = [{
             'id'          : cart.id,
             'product_name': cart.product.name,
             'quantity'    : cart.quantity,
             'price'       : cart.product.price,
-            'images'      : [image.image_url for image in cart.product.productimage_set.all()]}
-            for cart in Cart.objects.filter(user=request.user)]
+            'image_url'   : cart.product.productimage_set.first().image_url
+            } for cart in Cart.objects.filter(user=request.user)]
         return JsonResponse({"message" : "SUCCESS", "cart" : cart_products}, status=200)
     
-    @login_decorator
+    @signin_decorator
     def delete(self, request):
         try:
             data = json.loads(request.body)
-            Cart.objects.filter(user=request.user, id__in=data['cart_ids']).delete()
+            Cart.objects.get(user=request.user, id=data['cart_id']).delete()
             return JsonResponse({"message":"DELETE_SUCCESS"}, status=200)
 
         except json.JSONDecodeError:
@@ -56,7 +58,7 @@ class CartView(View):
         except KeyError:
             return JsonResponse({"message" : "KEY_ERROR"}, status=400)
 
-    @login_decorator
+    @signin_decorator
     def patch(self, request):
         try: 
             data         = json.loads(request.body)
@@ -73,4 +75,4 @@ class CartView(View):
             return JsonResponse({"message" : "KEY_ERROR"}, status=400)
 
         except Cart.DoesNotExist:
-            return JsonResponse({'message':'JSONDecodeError'}, status=404)
+            return JsonResponse({'message':'CART_DOES_NOT_EXIST'}, status=404)
