@@ -13,17 +13,16 @@ class CartView(View):
     def post(self, request):
         try:
             data     = json.loads(request.body)
-            quantity = data['quantity']
             product  = Product.objects.get(id=data['product_id'])
             
             # 아래 조건을 만족하는 cart object 있으면 get, 없으면 create(deafults 적용)
             cart, created = Cart.objects.get_or_create(
-                defaults  = {'quantity' : quantity},
+                defaults  = {'quantity' : 1},
                 product   = product,
                 user      = request.user
             )
             if not created:
-                cart.quantity += quantity
+                cart.quantity += 1
                 cart.save()
                 return JsonResponse({"message" : "CART_QUANTITY_CHANGED"}, status=200)
             return JsonResponse({"message" : "PUT_IN_CART_SUCCESS"}, status=201)
@@ -49,7 +48,7 @@ class CartView(View):
     def delete(self, request):
         try:
             data = json.loads(request.body)
-            Cart.objects.get(user=request.user, id=data['cart_id']).delete()
+            Cart.objects.filter(user=request.user, id__in=data['cart_ids']).delete()
             return JsonResponse({"message":"DELETE_SUCCESS"}, status=200)
 
         except json.JSONDecodeError:
