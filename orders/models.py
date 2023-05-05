@@ -5,6 +5,8 @@ from products.models import Product
 from users.models    import User
 
 class Order(TimeStampModel):
+    receiver     = models.CharField(max_length=100)
+    address      = models.CharField(max_length=255)
     user         = models.ForeignKey(User, on_delete=models.CASCADE)
     order_status = models.ForeignKey('OrderStatus', on_delete=models.CASCADE)
 
