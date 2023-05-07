@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from my_settings import DATABASES, SECRET_KEY
+from my_settings import DATABASES, SECRET_KEY, KAKAO_REDIRECT_URI, KAKAO_REST_API_KEY
 
 import pymysql
 pymysql.version_info = (1, 4, 3, "final", 0)
@@ -33,7 +33,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['13.125.232.99', '13.125.232.99:8000', '*']
 
-
+KAKAO_REST_API_KEY = KAKAO_REST_API_KEY
+KAKAO_REDIRECT_URI = KAKAO_REDIRECT_URI
 # Application definition
 
 INSTALLED_APPS = [
