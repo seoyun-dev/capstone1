@@ -33,8 +33,6 @@ class ProductListView(View):
                     'name'        : product.name,
                     'description' : product.description,
                     'price'       : product.price,
-                    'stock'       : product.stock,
-                    'sold'        : product.sold,
                     'image_url'   : [image.image_url for image in product.productimage_set.all()],
                     'release_date': product.release_date,
                 } for product in products_list
@@ -58,22 +56,10 @@ class ProductDetailView(View):
                 'description' : product.description,
                 'content_url' : product.content_url,
                 'price'       : product.price,
-                'stock'       : product.stock,
                 'image_url'   : [image.image_url for image in product.productimage_set.all()],
                 'release_date': product.release_date,
             }
-            if product.sub_category.category.name == "fitness_equipment":
-                workout_links = [
-                    {
-                        'thumbnail_url' : link.thumbnail_url,
-                        'video_url' : link.video_url,
-                        'product' : product.id
-                    } for link in product.workoutlink_set.all()
-                ]
-                return JsonResponse({"result" : {"product_detail" : product_detail, "workout_links" : workout_links}}, status = 200)
-            
-            else:
-                return JsonResponse({"result" : product_detail}, status=200)
+            return JsonResponse({"result" : product_detail}, status=200)
         
         except Product.DoesNotExist:
             return JsonResponse({"message" : "PRODUCT_DOES_NOT_EXIST"}, status=400)
