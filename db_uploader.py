@@ -8,6 +8,7 @@ django.setup()
 
 # # 환경변수 설정 후 model import
 from products.models  import Product, ProductImage
+
 # with open('products.csv') as in_file:
 #         data_reader = csv.reader(in_file)
 #         next(data_reader, None) # 출력시 함께 출력되는 맨첫줄을 제외하고 출력하기 위함
@@ -29,3 +30,6 @@ with open('product_images.csv') as in_file:
             image_url       = row[1]
             
             ProductImage.objects.create(image_url=image_url, product_id=product_id)
+
+
+

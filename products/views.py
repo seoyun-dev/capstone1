@@ -33,7 +33,7 @@ class ProductListView(View):
                     'name'        : product.name,
                     'description' : product.description,
                     'price'       : product.price,
-                    'image_url'   : [image.image_url for image in product.productimage_set.all()],
+                    'image_url'   : product.productimage_set.first().image_url,
                     'release_date': product.release_date,
                 } for product in products_list
             ]
