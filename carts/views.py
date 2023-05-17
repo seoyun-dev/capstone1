@@ -4,11 +4,11 @@ from django.http     import JsonResponse
 from django.views    import View
 
 from carts.models    import Cart
-from users.utils     import signin_decorator
+# from users.utils     import signin_decorator
 from products.models import Product
 
 class CartView(View):
-    @signin_decorator
+    # @signin_decorator
     def post(self, request):
         try:
             data     = json.loads(request.body)
@@ -32,7 +32,7 @@ class CartView(View):
         except json.JSONDecodeError:
             return JsonResponse({'message':'JSONDecodeError'}, status=404)
 
-    @signin_decorator
+    # @signin_decorator
     def get(self, request):
         cart_products = [{
             'id'          : cart.id,
@@ -43,7 +43,7 @@ class CartView(View):
             } for cart in Cart.objects.filter(user=request.user)]
         return JsonResponse({"message" : "SUCCESS", "cart" : cart_products}, status=200)
     
-    @signin_decorator
+    # @signin_decorator
     def delete(self, request):
         try:
             data = json.loads(request.body)
@@ -56,7 +56,7 @@ class CartView(View):
         except KeyError:
             return JsonResponse({"message" : "KEY_ERROR"}, status=400)
 
-    @signin_decorator
+    # @signin_decorator
     def patch(self, request):
         try: 
             data         = json.loads(request.body)

@@ -1,31 +1,25 @@
-import jwt
+# import json
 
-from django.conf  import settings
-from django.http  import JsonResponse
+# from django.http        import JsonResponse
+# from users.models       import User
+# from capstone1.settings import SECRET_KEY
 
-from users.models import User
+# def signin_decorator():
+#     def wrapper(self, request):
+#         try:
+#             user_token = request.headers.get('Authorization', None)
+#             payload = jwt.decode(user_token, SECRET_KEY, algorithm='HS256')
+#             request.user = User.objects.get(id=payload['id'])
+#             data         = json.loads(request.body)
+#             user         = User.objects.get(kakao_id = data['id'])
+#             request.user = user
 
-def login_decorator(func):
-    def wrapper(self, request, *args, **kwargs):
-        try:
-            access_token = request.headers.get('AUTHORIZATION')
+#             return JsonResponse({'message':'LOGIN_USER'}, status=200)
 
-            if access_token == '':
-                request.user = None
-                return func(self, request, *args, **kwargs)
+#         except User.DoesNotExist:
+#             return JsonResponse({'message':'INVALID_USER'}, status=400)
 
-            payload      = jwt.decode(access_token, settings.SECRET_KEY, settings.ALGORITHM)
-            request.user = User.objects.get(id=payload['id'])
+#         except json.JSONDecodeError:
+#             return JsonResponse({"message" : "JSONDecodeError"}, status=404)
 
-            return func(self, request, *args, **kwargs)
-
-        except User.DoesNotExist:
-            return JsonResponse({'MESSAGE':'INVALID_USER'}, status=401)
-
-        except jwt.exceptions.DecodeError:
-            return JsonResponse({'MESSAGE':'INVALID_PAYLOAD'}, status=401)
-
-        except KeyError:
-            return JsonResponse({'MESSAGE':'KEY_ERROR'}, status=400)
-    
-    return wrapper
+#     return wrapper
