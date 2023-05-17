@@ -11,7 +11,7 @@ class KakaoSocialLoginView(View):
             data       = json.loads(request.body)
 
             user, created = User.objects.get_or_create(
-                kakao_id   = data['id'],
+                kakao_id   = data['kakao_id'],
                 nickname   = data['nickname']
             )
 
