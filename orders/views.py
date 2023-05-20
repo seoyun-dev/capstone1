@@ -68,7 +68,7 @@ class OrderView(View):
             }
 
             return JsonResponse({'RESULT' : result}, status=200)
-        except JSONDecodeError:
+        except json.JSONDecodeError:
             return JsonResponse({'message' : 'JSONDecoderError'}, status=400)
     
 
