@@ -44,7 +44,7 @@ class OrderView(View):
     def get(self, request):
         try:
             result = {
-                'id'         : request.user.id,
+                'user_id'    : request.user.id,
                 'user_name'  : request.user.nickname,
                 'orders_list': [
                     {
