@@ -6,7 +6,7 @@ from django.views           import View
 from users.models     import User
 
 class KakaoSocialLoginView(View):
-    def get(self, request):
+    def post(self, request):
         try:
             data       = json.loads(request.body)
 
