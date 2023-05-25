@@ -49,6 +49,7 @@ class OrderView(View):
                 'orders_list': [
                     {
                         'id'          : order.id,
+                        'tid'         : order.tid,
                         'receiver'    : order.receiver,
                         'order_status': order.order_status.status,
                         # re.sub(pattern, new_text, text): text에서 pattern인 부분을 new_text로 변경
