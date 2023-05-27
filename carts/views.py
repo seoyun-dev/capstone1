@@ -35,7 +35,8 @@ class CartView(View):
     @signin_decorator
     def get(self, request):
         cart_products = [{
-            'id'          : cart.id,
+            'cart_id'     : cart.id,
+            'product_id'  : cart.product.id,
             'product_name': cart.product.name,
             'quantity'    : cart.quantity,
             'price'       : cart.product.price,

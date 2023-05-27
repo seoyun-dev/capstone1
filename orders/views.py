@@ -48,7 +48,7 @@ class OrderView(View):
                 'user_name'  : request.user.nickname,
                 'orders_list': [
                     {
-                        'id'          : order.id,
+                        'order_id'    : order.id,
                         'tid'         : order.tid,
                         'receiver'    : order.receiver,
                         'order_status': order.order_status.status,
@@ -56,12 +56,13 @@ class OrderView(View):
                         'order_number': re.sub('[^0-9]', '', str(order.created_at)) + str(order.id),
                         'products'    : [
                             {
-                                'id'          : order_product.id,
-                                'product_img' : order_product.product.productimage_set.all()[0].image_url,
-                                'product_name': order_product.product.name,
-                                'product_price' : order_product.product.price,
-                                'quantity' : order_product.quantity,
-                                'product_total_price' : order_product.product.price * order_product.quantity
+                                'order_product_id'   : order_product.id,
+                                'product_id'         : order_product.product.id,
+                                'product_img'        : order_product.product.productimage_set.all()[0].image_url,
+                                'product_name'       : order_product.product.name,
+                                'product_price'      : order_product.product.price,
+                                'quantity'           : order_product.quantity,
+                                'product_total_price': order_product.product.price * order_product.quantity
                             } for order_product in order.orderproduct_set.all()
                         ]
                     } for order in Order.objects.filter(user_id=request.user.id)
