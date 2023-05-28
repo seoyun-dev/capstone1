@@ -51,6 +51,7 @@ class OrderView(View):
                         'order_id'    : order.id,
                         'tid'         : order.tid,
                         'receiver'    : order.receiver,
+                        'address'     : order.address,
                         'order_status': order.order_status.status,
                         # re.sub(pattern, new_text, text): text에서 pattern인 부분을 new_text로 변경
                         'order_number': re.sub('[^0-9]', '', str(order.created_at)) + str(order.id),
